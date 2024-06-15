@@ -98,90 +98,81 @@ void setup() {
 // using an RGB LED.
 void loop() {
 
-    // Save the number of vertical pixels required for the tallest character
-  // in the current font.  This is used later to properly position text on
-  // our display.
-  byte font_height = lander_display.getMaxCharHeight();
 
-  lander_display.clearBuffer();  // clear the internal memory
+ 
 
-  /*
-   * Even though we will only be displaying text in this lesson, our display is a
-   * graphics display.  Text can be displayed at ANY point on the display so the
-   * library has a setCursor() function to locate the first character to be displayed.
-   *
-   * By default, the cursor position is set to the bit at the lower-left of the
-   * first character, but here we set this to be the UPPER-left of the first
-   * character which makes it easier to position our first line of text on the top
-   * of our display.
-   */
-  lander_display.setFontPosTop();
 
-  // Title line for our display
-  drawCenteredString(0, "Current Color");
-  byte centered_y = (font_height * 2) + ((lander_display.getDisplayHeight() - (font_height * 2)) / 2);
-  // This statement instructs the graphics library that the Y coordinate used to position
-  // the text will be halfway between the top and bottom of the text.
-  lander_display.setFontPosCenter();  // Draw text with centered Y coordinate
 
   // First demonstrate our different PWM levels by slowly brightening our red LED
   displayColor(OFF, OFF, OFF);  // OFF!
-  drawCenteredString(centered_y, "Off");
+  drawCenteredString("Off");
   lander_display.sendBuffer();  // transfer internal memory to the display
   Serial.println("OFF");
   delay(COLOR_DELAY);
-  lander_display.clearBuffer();  // clear the internal memory
+
 
   displayColor(DIM, OFF, OFF);  // Display red LED at 1/4 intensity
-  drawCenteredString(centered_y, "25% RED");
+  drawCenteredString("25% RED");
   lander_display.sendBuffer();  // transfer internal memory to the display
   Serial.println("1/4 RED");
   delay(COLOR_DELAY);
-  lander_display.clearBuffer();  // clear the internal memory
+
 
   displayColor(BRIGHTER, OFF, OFF);  // Display red LED at 1/2 intensity
-  drawCenteredString(centered_y, "50% RED");
+  drawCenteredString("50% RED");
   lander_display.sendBuffer();  // transfer internal memory to the display
   Serial.println("1/2 RED");
   delay(COLOR_DELAY);
-  lander_display.clearBuffer();  // clear the internal memory
+
 
   displayColor(BRIGHT, OFF, OFF);  // Display red LED at 3/4 intensity
-  drawCenteredString(centered_y, "75% RED");
+  drawCenteredString("75% RED");
   lander_display.sendBuffer();  // transfer internal memory to the display
   Serial.println("3/4 RED");
   delay(COLOR_DELAY);
-  lander_display.clearBuffer();  // clear the internal memory
+
 
   displayColor(BRIGHTEST, OFF, OFF);  // Display red LED at FULL intensity
-  drawCenteredString(centered_y, "100% RED");
+  drawCenteredString("100% RED");
   lander_display.sendBuffer();  // transfer internal memory to the display
   Serial.println("FULL RED");
   delay(COLOR_DELAY);
-  lander_display.clearBuffer();  // clear the internal memory
+
 
 
   // Display our other two LED colors at half intensity
   displayColor(OFF, BRIGHT, OFF);  // Display the green LED
+  drawCenteredString("GREEN");
+  lander_display.sendBuffer();  // transfer internal memory to the display
   Serial.println("3/4 GREEN");
   delay(COLOR_DELAY);
   displayColor(OFF, OFF, BRIGHT);  // Display the blue LED
+  drawCenteredString("BLUE");
+  lander_display.sendBuffer();  // transfer internal memory to the display
   Serial.println("3/4 BLUE");
   delay(COLOR_DELAY);
 
   // Now show various colors (at half intensity) by mixing our three colors
   displayColor(BRIGHT, BRIGHT, OFF);  // Display yellow by mixing red and green LEDs
+  drawCenteredString("YELLOW");
+  lander_display.sendBuffer();  // transfer internal memory to the display
   Serial.println("YELLOW");
   delay(COLOR_DELAY);
   displayColor(OFF, BRIGHT, BRIGHT);  // Display cyan by mixing green and blue LEDs
+  drawCenteredString("CYAN");
+  lander_display.sendBuffer();  // transfer internal memory to the display
   Serial.println("CYAN");
   delay(COLOR_DELAY);
   displayColor(BRIGHT, OFF, BRIGHT);  // Display magenta by mixing red and blue LEDs
+  drawCenteredString("MAGENTA");
+  lander_display.sendBuffer();  // transfer internal memory to the display
   Serial.println("MAGENTA");
   delay(COLOR_DELAY);
 
   // Display all of our LEDs to get white.
   displayColor(BRIGHT, BRIGHT, BRIGHT);  // white
+  drawCenteredString("WHITE");
+  lander_display.sendBuffer();  // transfer internal memory to the display
   Serial.println("WHITE");
   delay(COLOR_DELAY);
 }
@@ -208,7 +199,20 @@ void displayColor(
   analogWrite(BLUE_PIN, blue_intensity);    // Set blue LED intensity using PWM
 }
 
-byte drawCenteredString(byte y, char *string) {
+byte drawCenteredString(char *string) {
+  byte font_height = lander_display.getMaxCharHeight();
+  byte title_x = (lander_display.getDisplayWidth()- lander_display.getStrWidth("Current Color")) / 2;
   byte centered_x = (lander_display.getDisplayWidth() - lander_display.getStrWidth(string)) / 2;
-  lander_display.drawStr(centered_x, y, string);
+  lander_display.clearBuffer();  // clear the internal memory
+  lander_display.setFontPosTop();
+  // Title line for our display
+  lander_display.drawStr(title_x, 0, "Current Color");
+
+
+
+  byte centered_y = (font_height * 2) + ((lander_display.getDisplayHeight() - (font_height * 2)) / 2);
+  // This statement instructs the graphics library that the Y coordinate used to position
+  // the text will be halfway between the top and bottom of the text.
+  lander_display.setFontPosCenter();  // Draw text with centered Y coordinate
+  lander_display.drawStr(centered_x, centered_y, string);
 }
